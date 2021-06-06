@@ -110,6 +110,19 @@ public:
     const Tensor<T, dims...> &operator[](size_t i) const {
         return data_[i];
     }
+
+    template<size_t from, size_t to>
+    Tensor<T, to - from, dims...> &subtensor() {
+        static_assert(from < to && to < n);
+        return *reinterpret_cast<Tensor<T, to - from, dims...> *>(&data[from]);
+    }
+
+    template<size_t from, size_t to>
+    const Tensor<T, to - from, dims...> &subtensor() const {
+        static_assert(from < to && to < n);
+        return *reinterpret_cast<const Tensor<T, to - from, dims...> *>(&data[from]);
+    }
+
     auto begin() {
         return data_.begin();
     }
